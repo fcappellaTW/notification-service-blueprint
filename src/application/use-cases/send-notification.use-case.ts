@@ -18,7 +18,7 @@ export class SendNotificationUseCase {
         const now = this._dateTimeProvider.now();
         const currentHour = now.getHours();
 
-        if (currentHour > FORBIDDEN_WINDOW_END_HOUR || currentHour < FORBIDDEN_WINDOW_START_HOUR) {
+        if (currentHour >= FORBIDDEN_WINDOW_END_HOUR || currentHour < FORBIDDEN_WINDOW_START_HOUR) {
             throw new InvalidTimeException('Notification can only be sent between 6am and 10pm');
         };
 
