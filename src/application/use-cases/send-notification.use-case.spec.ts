@@ -1,7 +1,8 @@
 import { IDateTimeProvider } from "../ports/date-time-provider";
-import { SendNotificationPayload, SendNotificationUseCase } from "./send-notification.use-case";
+import { SendNotificationUseCase } from "./send-notification.use-case";
 import { InvalidTimeException } from "../../domain/errors/invalid-time.exception";
 import { INotificationGateway } from "../ports/notification-gateway";
+import { NotificationPayload } from "../../domain/schemas/notification.schema";
 
 describe('SendNotification Use Case', () => {
     let sut: SendNotificationUseCase;
@@ -21,7 +22,7 @@ describe('SendNotification Use Case', () => {
     it('should throw an invalid time error when trying to send a notification outside the allowed window', async () => {
       jest.spyOn(dateTimeProviderStub, 'now').mockReturnValue(new Date(2025, 9, 10, 23, 0, 0));
 
-      const invalidNotificationPayload: SendNotificationPayload = {
+      const invalidNotificationPayload: NotificationPayload = {
         recipientEmail: 'test@example.com',
         subject: 'My Subject',
         body: 'My message body',
@@ -34,9 +35,9 @@ describe('SendNotification Use Case', () => {
     });
 
     it('should call the notification gateway when the notification is sent within the allowed window', async () => {
-        jest.spyOn(dateTimeProviderStub, 'now').mockReturnValue(new Date(2025, 9, 10, 10, 0, 0)); // October 10, 10:00
+        jest.spyOn(dateTimeProviderStub, 'now').mockReturnValue(new Date(2025, 9, 10, 10, 0, 0));
 
-        const payload: SendNotificationPayload = {
+        const payload: NotificationPayload = {
             recipientEmail: 'test@example.com',
             subject: 'My Subject',
             body: 'My message body',

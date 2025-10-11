@@ -1,7 +1,9 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
-import { SendNotificationPayload, SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
+import { SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
 import { IDateTimeProvider } from "../../application/ports/date-time-provider";
 import { ConsoleNotificationGateway } from "../gateways/console-notification.gateway";
+import { notificationPayloadSchema } from "../../domain/schemas/notification.schema";
+import { z, ZodError } from "zod";
 
 class RealDateTimeProvider implements IDateTimeProvider {
     now(): Date {
@@ -18,7 +20,7 @@ const sendNotificationUseCase = new SendNotificationUseCase(
 
 export const handlerLogic = async (
     event: APIGatewayProxyEvent,
-    context: Context,
+    _context: Context,
     useCase: SendNotificationUseCase
 ): Promise<APIGatewayProxyResult> => {
     try {
@@ -26,7 +28,8 @@ export const handlerLogic = async (
             return { statusCode: 400, body: JSON.stringify({ message: 'Bad Request: Missing body' })}
         }
 
-        const payload = JSON.parse(event.body) as SendNotificationPayload;
+        const rawPayload = JSON.parse(event.body);
+        const payload = notificationPayloadSchema.parse(rawPayload);
 
         await useCase.execute(payload);
         return {
@@ -34,6 +37,15 @@ export const handlerLogic = async (
             body: JSON.stringify({ message: 'Notification sent successfully' })
         }
     } catch (error: any) {
+        if (error instanceof ZodError) {
+          return {
+            statusCode: 400,
+            body: JSON.stringify({
+              message: 'Bad Request: Invalid payload',
+              errors: z.flattenError(error).fieldErrors,
+            }),
+          };
+        }
 
         console.error('An error occurred:', error);
 

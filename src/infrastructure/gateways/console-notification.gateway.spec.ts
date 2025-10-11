@@ -1,4 +1,4 @@
-import { SendNotificationPayload } from "../../application/use-cases/send-notification.use-case";
+import { NotificationPayload } from "../../domain/schemas/notification.schema";
 import { ConsoleNotificationGateway } from "./console-notification.gateway";
 
 describe('ConsoleNotificationGateway Integration Test', () => {
@@ -14,7 +14,7 @@ describe('ConsoleNotificationGateway Integration Test', () => {
 
     it('should log the notification details to the console', async () => {
         const gateway = new ConsoleNotificationGateway();
-        const payload: SendNotificationPayload = {
+        const payload: NotificationPayload = {
             recipientEmail: 'test@example.com',
             subject: 'My Subject',
             body: 'My message body',

@@ -1,8 +1,8 @@
 import { INotificationGateway } from "../../application/ports/notification-gateway";
-import { SendNotificationPayload } from "../../application/use-cases/send-notification.use-case";
+import { NotificationPayload } from "../../domain/schemas/notification.schema";
 
 export class ConsoleNotificationGateway implements INotificationGateway {
-    async send(notification: SendNotificationPayload): Promise<void> {
+    async send(notification: NotificationPayload): Promise<void> {
         console.log('--- New Notification to Send ---');
         console.log(`Recipient: ${notification.recipientEmail}`);
         console.log(`Subject: ${notification.subject}`);

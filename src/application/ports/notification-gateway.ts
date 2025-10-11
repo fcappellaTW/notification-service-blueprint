@@ -1,5 +1,5 @@
-import { SendNotificationPayload } from "../use-cases/send-notification.use-case";
+import { NotificationPayload } from "../../domain/schemas/notification.schema";
 
 export interface INotificationGateway {
-    send(notification: SendNotificationPayload): Promise<void>;
+    send(notification: NotificationPayload): Promise<void>;
 }

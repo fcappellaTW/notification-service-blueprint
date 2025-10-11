@@ -1,7 +1,8 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
-import { SendNotificationPayload, SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
-import { handler, handlerLogic } from "./notification.handler";
+import { SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
+import { handlerLogic } from "./notification.handler";
 import { InvalidTimeException } from "../../domain/errors/invalid-time.exception";
+import { NotificationPayload } from "../../domain/schemas/notification.schema";
 
 describe('Notification Lambda Handler ', () => {
     let sendNotificationUseCaseMock: jest.Mocked<SendNotificationUseCase>;
@@ -20,7 +21,7 @@ describe('Notification Lambda Handler ', () => {
     });
 
     it('should call the use case and return 202 on valid request', async () => {
-        const validPayload: SendNotificationPayload = {
+        const validPayload: NotificationPayload = {
             recipientEmail: 'success@example.com',
             subject: 'Valid Subject',
             body: 'Valid body.',
@@ -82,7 +83,11 @@ describe('Notification Lambda Handler ', () => {
     });
 
     it('should return 500 for unexpected errors', async () => {
-        const validPayload = { /* ... */ };
+        const validPayload = {
+            recipientEmail: 'fail@example.com',
+            subject: 'Subject',
+            body: 'Body',
+          };
         const event: Partial<APIGatewayProxyEvent> = { body: JSON.stringify(validPayload) };
         sendNotificationUseCaseMock.execute.mockRejectedValue(new Error('Unexpected DB error'));
 
@@ -95,4 +100,27 @@ describe('Notification Lambda Handler ', () => {
         expect(result.statusCode).toBe(500);
         expect(result.body).toContain('Internal Server Error');
       });
+
+    it('should return 400 when the request body is missing a required field (e.g., subject)', async () => {
+        const invalidPayload = {
+            recipientEmail: 'test@example.com',
+            body: 'This is a body without a subject.',
+        };
+
+        const event: Partial<APIGatewayProxyEvent> = {
+            body: JSON.stringify(invalidPayload),
+        };
+
+        const result = await handlerLogic(
+            event as APIGatewayProxyEvent,
+            {} as Context,
+            sendNotificationUseCaseMock
+        );
+
+        expect(result.statusCode).toBe(400);
+
+        const resultBody = JSON.parse(result.body);
+        expect(resultBody.message).toContain('Bad Request');
+        expect(sendNotificationUseCaseMock.execute).not.toHaveBeenCalled();
+    });
 });
