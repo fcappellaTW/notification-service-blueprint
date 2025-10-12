@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import { SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
-import { handlerLogic } from "./notification.handler";
+import { handlerLogic } from "./handler";
 import { InvalidTimeException } from "../../domain/errors/invalid-time.exception";
 import { NotificationPayload } from "../../domain/schemas/notification.schema";
 

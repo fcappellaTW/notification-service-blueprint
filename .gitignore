@@ -3,6 +3,7 @@
 
 # Build output
 /dist
+dist.zip
 
 # Log files
 npm-debug.log*
@@ -11,6 +12,7 @@ yarn-error.log*
 
 # Environment variables - IMPORTANT
 .env
+.envrc
 .env.local
 .env.development.local
 .env.test.local
@@ -23,3 +25,14 @@ yarn-error.log*
 
 # Coverage
 coverage/
+
+# Terraform files
+# Ignore local variable files
+*.tfvars
+*.tfvars.json
+
+# Ignore Terraform state files
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup

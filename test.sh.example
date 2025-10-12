@@ -1,0 +1,13 @@
+API_URL="PUT_YOUR_URL_HERE/notifications"
+
+echo "--- Happy path ---"
+curl -X POST -H "Content-Type: application/json" \
+-d '{"recipientEmail":"email@test.com","subject":"Testing email.","body":"This was sent by our API!"}' \
+$API_URL
+echo -e "\n"
+
+echo "--- Validations  (400) ---"
+curl -X POST -H "Content-Type: application/json" \
+-d '{"recipientEmail":"email-invalido","body":"Without body"}' \
+$API_URL
+echo -e "\n"

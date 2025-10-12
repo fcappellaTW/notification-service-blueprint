@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
 import { SendNotificationUseCase } from "../../application/use-cases/send-notification.use-case";
 import { IDateTimeProvider } from "../../application/ports/date-time-provider";
-import { ConsoleNotificationGateway } from "../gateways/console-notification.gateway";
 import { notificationPayloadSchema } from "../../domain/schemas/notification.schema";
+import { SESNotificationGateway } from "../gateways/ses-notification.gateway";
 import { z, ZodError } from "zod";
 
 class RealDateTimeProvider implements IDateTimeProvider {
@@ -12,7 +12,7 @@ class RealDateTimeProvider implements IDateTimeProvider {
   }
 
 const dateTimeProvider = new RealDateTimeProvider();
-const notificationGateway = new ConsoleNotificationGateway();
+const notificationGateway = new SESNotificationGateway();
 const sendNotificationUseCase = new SendNotificationUseCase(
   dateTimeProvider,
   notificationGateway
