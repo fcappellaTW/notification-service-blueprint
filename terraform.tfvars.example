@@ -1,0 +1,5 @@
+# terraform/terraform.tfvars.example
+
+# The email address verified in AWS SES to be used as the sender.
+# You MUST verify this email in the AWS SES console first.
+source_email = "your-verified-sender-email@example.com"
