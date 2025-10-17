@@ -50,7 +50,7 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "notification_lambda" {
   function_name = "notification-service-lambda"
   handler       = "infrastructure/http/handler.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs22.x"
 
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256

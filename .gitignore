@@ -36,3 +36,6 @@ coverage/
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+
+# Scripts
+test.sh
