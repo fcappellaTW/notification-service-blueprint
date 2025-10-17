@@ -6,10 +6,10 @@
   "scripts": {
     "test": "jest",
     "clean": "rimraf dist dist.zip",
-    "build": "tsc",
-    "package:prepare": "cpr package.json dist/ -o && cpr package-lock.json dist/ -o && npm install --prefix ./dist --omit=dev",
+    "typecheck": "tsc --noEmit",
+    "build": "esbuild src/infrastructure/http/handler.ts --bundle --platform=node --target=node22 --outdir=dist",
     "package:zip": "zip -r dist.zip dist",
-    "package": "npm run clean && npm run build && npm run package:prepare && npm run package:zip"
+    "package": "npm run clean && npm run build && npm run package:zip"
   },
   "keywords": [],
   "author": "",
@@ -20,10 +20,10 @@
     "@types/node": "^24.7.1",
     "aws-sdk-client-mock": "^4.1.0",
     "cpr": "^3.0.1",
+    "esbuild": "0.25.11",
     "jest": "^30.2.0",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.4.4",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
