@@ -145,9 +145,15 @@ Use the provided example script to test your live endpoint.
     ```
     You should see a success message and receive an email at your verified recipient address! 🎉
 
-### 📈 Next Steps & Tech Debt
+### 🗺️ Architectural Roadmap & Future Vision
 
-This project is a solid foundation. Here are some documented next steps:
-* **Terraform S3 Backend:** Configure a remote backend for the Terraform state to enable team collaboration.
-* **CI/CD Pipeline:** Create a GitHub Actions workflow to automate testing and deployment.
-* **Optimize with a Bundler:** Refactor the build process to use `esbuild` for faster cold starts and a smaller package size.
+With the foundational CI/CD pipeline, remote state management, and build optimizations in place, this project serves as a robust and stable blueprint for serverless applications.
+
+The next planned architectural evolution is to enhance the system's resilience and scalability, transforming it into a truly event-driven service.
+
+* **Evolve to an Asynchronous, Event-Driven Architecture**
+    * **The Vision:** Introduce an **Amazon SQS queue** to decouple the initial API request from the actual notification sending process. The API Lambda's only job would be to validate and enqueue the request, providing an instant response to the client. A separate processor Lambda would then consume messages from this queue asynchronously.
+    * **Key Benefits:**
+        * **✨ Instant API Responses:** Clients no longer wait for the email to be sent.
+        * **🛡️ Greater Resilience & Reliability:** Protects against failures and downtime of the email service (SES). With retries and a Dead-Letter Queue (DLQ), no notification is ever lost.
+        * **🌊 Massive Scalability:** The system can gracefully handle huge traffic spikes by buffering requests in the queue.
